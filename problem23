@@ -1,0 +1,57 @@
+//Status: gives us an incorrect answer. contains a logic error
+//https://projecteuler.net/problem=23
+
+import java.util.ArrayList;
+public class problem23Test {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ArrayList<Integer> abundantNumbers = new ArrayList<Integer>();
+		ArrayList<Integer> abundantSumNumbers = new ArrayList<Integer>();
+		int factorSum, num;
+		
+		//goes through all numbers between 12 and 28123 and determines if it's abundant
+		//if it is, add it to the abundant numbers array
+		//does this by adding all factors below the number in question, if its greater than the original
+		//its abundant
+		for (int i =12;i<=28123;i++) {
+			factorSum = 0;
+			for (int j = 1;j<i;j++) {
+				factorSum += (i%j==0)? j: 0;
+				if (factorSum>i) {
+					abundantNumbers.add(i);
+					break;
+				}
+			}
+		}
+		
+		//goes through the addition of abundant numbers with abundant numbers.
+		// if it's less than 28123 and is not already in the sum list, add it to the sum list
+		for (int i=0;i<abundantNumbers.size();i++) {
+			for (int j=i;j<abundantNumbers.size();j++){
+				num =abundantNumbers.get(i)*abundantNumbers.get(j);
+				if(num<28123 && !abundantSumNumbers.contains(num)) {
+					abundantSumNumbers.add(num);
+				}
+			}
+		}
+		num =0;
+		
+		// we'll go through all integers up to 28123
+		// if it's not in list of abundant sums, then we add it to the counter
+		for (int i =1;i<=28123;i++){
+			if (!abundantSumNumbers.contains(i)) {
+				num+=i;
+			}
+		}
+		
+		System.out.print(num);
+		
+	}
+	
+	
+
+}
