@@ -1,0 +1,110 @@
+//https://projecteuler.net/problem=35
+
+import java.util.ArrayList;
+import java.util.Random;
+
+/**
+ * 
+ */
+
+/**
+ * @author pnguye35
+ *
+ */
+public class Circular {
+	
+	// constant
+	public final static int ONE_MILLION = 1000000;
+	
+	// variables
+	private int upperLimit;
+	private ArrayList<Integer> primeList;
+	private ArrayList<Integer> circularList;
+	
+
+// creates the object with all the information needed
+	// then prints out the size of the circular array list
+	public static void main(String argv[]) {
+		Circular test = new Circular(ONE_MILLION);
+		System.out.print("There are " +test.getCircularList().size()+" circular numbers below "+test.getUpperLimit());
+		
+	}
+	
+
+	/**
+	 * 
+	 */
+	// makes sure the user input is possitive, then generates the list of primes below
+	//our upper limit
+	//then goes through our primes to see which are circular
+	public Circular(int num) {
+		upperLimit = Math.abs(num);
+		GeneratePrimeList();
+		System.out.println("Prime list generated");
+		GenerateCircularList();
+	}
+	//this will go through every number up to the upper limit
+	//and see if any primes below it are a divisor to determine if it's prime
+	// if it's prime, add it to the list
+	private void GeneratePrimeList() {
+		boolean isPrime;
+		primeList = new ArrayList<Integer>();
+
+		primeList.add(2);
+		for(int i=3;i<=upperLimit;i++) {
+			isPrime=true;
+			for(Integer j: primeList) {
+				if (i%j==0) {
+					isPrime=false;
+					break;
+				}
+			}
+			if (isPrime) {
+				primeList.add(i);
+			}
+			
+		}
+	}
+	
+	//Fermats test to see if something isn't prime. Ran into funky rounding situations
+	//that concluded some prime numbers are composite. Never used
+	private boolean FermatTest(int n) {
+		Random rng = new Random();
+		// will run into problems for numbers like 0, 1
+		
+		return (Math.pow(rng.nextInt(n-1)+1, n-1)%n==1 && n!=0 && n!=1) ? true : false;
+	}
+	
+	// takes the circular permutations of number and sees if the prime list
+	//has all elements of the circular permutation. if it does, then it's circular
+	private void GenerateCircularList() {
+		circularList = new ArrayList<Integer>();
+		for (Integer i:primeList) {
+			if (primeList.containsAll(CircularList(i))) {
+				circularList.add(i);
+			}
+		}
+	}
+	
+	// this will generate all the circular permutations of a given number and 
+	//return it as a list
+	private static ArrayList<Integer> CircularList(int n) {
+		ArrayList<Integer> tempArray = new ArrayList<Integer>();
+		String tempString = Integer.toString(n);
+		for (int i=0;i<tempString.length();i++) {
+			if (!tempArray.contains(Integer.parseInt(tempString))) {
+				tempArray.add(Integer.parseInt(tempString));
+			}
+			tempString = tempString.charAt(tempString.length()-1)+tempString.substring(0,tempString.length()-1);
+		}
+		return tempArray;
+	}
+	//this returns the circular list.
+	public ArrayList<Integer> getCircularList() {
+		return circularList;
+	}
+
+	public int getUpperLimit() {
+		return upperLimit;
+	}
+}
